@@ -58,6 +58,36 @@ function! go#doc#OpenBrowser(...) abort
   call go#tool#OpenBrowser(godoc_url)
 endfunction
 
+function! go#doc#OpenDash(...)
+  let pkgs = s:godocWord(a:000)
+  if empty(pkgs)
+    return
+  endif
+
+  let pkg = pkgs[0]
+  let exported_name = pkgs[1]
+  let keyword = "go"
+
+  let splitPkg = split(pkg, "/")
+  let vendorIdx = index(splitPkg, "vendor")
+
+  if vendorIdx >= 0
+    let splitPkg = splitPkg[vendorIdx + 1:-1]
+  endif
+
+  if splitPkg[0] =~ "\\."
+    " This is a weirdness with the way Dash refers to packages. It doesn't
+    " include the hostname :/
+    let pkg = join(splitPkg[1:-1], "/")
+    let keyword = "godoc"
+  endif
+
+  " example url: dash://go:fmt.Sprintf
+  "          or: dash://godoc:x/net/context.Context
+  let godoc_url = "dash://" . keyword . ":" . pkg . "." . exported_name
+  call go#tool#OpenBrowser(godoc_url)
+endfunction
+
 function! go#doc#Open(newmode, mode, ...) abort
   if len(a:000)
     " check if we have 'godoc' and use it automatically

@@ -55,6 +55,7 @@ command! -nargs=? GoDefStackClear :call go#def#StackClear(<f-args>)
 " -- doc
 command! -nargs=* -range -complete=customlist,go#package#Complete GoDoc call go#doc#Open('new', 'split', <f-args>)
 command! -nargs=* -range -complete=customlist,go#package#Complete GoDocBrowser call go#doc#OpenBrowser(<f-args>)
+command! -nargs=* -range -complete=customlist,go#package#Complete GoDocDash call go#doc#OpenDash(<f-args>)
 
 " -- fmt
 command! -nargs=0 GoFmt call go#fmt#Format(-1)
